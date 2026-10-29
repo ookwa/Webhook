@@ -3,503 +3,428 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b090a">
-<title>Ookwa Webhook Sender</title>
-
+<meta name="theme-color" content="#09090c">
+<title>Ookwa • Webhook Studio</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-:root {
-  --bg: #09090b;
-  --panel: #111114;
-  --border: #29292f;
-  --red: #ef3340;
-  --text: #f5f5f7;
-  --muted: #92929e;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Inter, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(ellipse at 50% 0%, #50101655, transparent 55%),
-    var(--bg);
-}
-
-header {
-  height: 75px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7%;
-  background: #09090bcc;
-}
-
-.logo {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
-
-.logo span { color: var(--red); }
-
-.badge {
-  font-size: 11px;
-  color: #ff8189;
-  background: #ef334018;
-  border: 1px solid #ef334044;
-  padding: 8px 11px;
-  border-radius: 20px;
-}
-
-main {
-  width: min(1050px, 92%);
-  margin: 65px auto;
-}
-
-.intro { margin-bottom: 30px; }
-
-.eyebrow {
-  color: var(--red);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-h1 {
-  font-size: clamp(30px, 5vw, 44px);
-  letter-spacing: -2px;
-  margin: 12px 0;
-}
-
-.intro p {
-  color: var(--muted);
-  line-height: 1.7;
-  font-size: 14px;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: 20px;
-}
-
-.panel {
-  padding: 25px;
-  background: #111114eF;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  min-width: 0;
-}
-
-.panel h2 {
-  margin: 0 0 7px;
-  font-size: 17px;
-}
-
-.sub {
-  color: var(--muted);
-  font-size: 12px;
-  margin-bottom: 24px;
-  line-height: 1.6;
-}
-
-label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin: 18px 0 9px;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 13px 14px;
-  color: var(--text);
-  background: #09090c;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  outline: none;
-  font: inherit;
-  font-size: 13px;
-  transition: border .2s;
-}
-
-input:focus, textarea:focus, select:focus {
-  border-color: var(--red);
-}
-
-textarea {
-  min-height: 145px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
-input::placeholder, textarea::placeholder {
-  color: #656570;
-}
-
-.row {
-  display: flex;
-  gap: 12px;
-}
-
-.row > div { flex: 1; min-width: 0; }
-
-button {
-  cursor: pointer;
-  border: 0;
-  border-radius: 9px;
-  padding: 13px 16px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  transition: .2s;
-}
-
-.send {
-  width: 100%;
-  margin-top: 20px;
-  background: var(--red);
-  color: white;
-}
-
-.send:hover {
-  background: #ff4b56;
-  box-shadow: 0 0 25px #ef334033;
-  transform: translateY(-1px);
-}
-
-.send:disabled {
-  opacity: .6;
-  cursor: wait;
-  transform: none;
-}
-
-.secondary {
-  background: #202025;
-  color: #ddd;
-  border: 1px solid var(--border);
-}
-
-.secondary:hover { border-color: var(--red); }
-
-.actions {
-  display: flex;
-  gap: 9px;
-  margin-top: 12px;
-}
-
-.actions button { flex: 1; }
-
-.preview-label {
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 23px 0 12px;
-}
-
-.discord-preview {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 15px;
-  background: #1a1b20;
-  border-radius: 8px;
-}
-
-.avatar {
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--red);
-  font-weight: 800;
-}
-
-.preview-content { min-width: 0; }
-
-.preview-name {
-  font-size: 13px;
-  font-weight: 700;
-  margin: 2px 0 9px;
-}
-
-.preview-name small {
-  color: #92929e;
-  font-weight: 400;
-  font-size: 10px;
-  margin-left: 5px;
-}
-
-.preview-message {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #dcdddf;
-  min-height: 20px;
-}
-
-.status {
-  display: none;
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.status.success {
-  display: block;
-  background: #143322;
-  color: #80e8a9;
-}
-
-.status.error {
-  display: block;
-  background: #38191d;
-  color: #ff9ca4;
-}
-
-.warning {
-  font-size: 11px;
-  line-height: 1.7;
-  color: #a8a8b3;
-  margin-top: 20px;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-footer {
-  text-align: center;
-  color: #676773;
-  font-size: 11px;
-  padding: 20px;
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 750px) {
-  main { margin: 40px auto; }
-  .layout { grid-template-columns: 1fr; }
-  header { padding: 0 5%; }
-  .panel { padding: 20px; }
-}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#08080b;--panel:#101014;--panel2:#15151b;--line:#292932;--red:#ff3348;--red2:#b90f2b;--text:#f5f5f7;--muted:#90909d;--green:#65e6a1;--mono:"DM Mono",monospace}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#6d102033,transparent 38%),radial-gradient(ellipse at 90% 15%,#3a102333,transparent 32%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.topbar{height:72px;position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,5vw,72px);border-bottom:1px solid #ffffff12;background:#09090de8;backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:18px;letter-spacing:-.7px}.brand-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(135deg,#ff4657,#8f0921);box-shadow:0 0 25px #ff334833;font-size:17px}.brand em{font-style:normal;color:var(--red)}
+.topright{display:flex;align-items:center;gap:15px;color:var(--muted);font-size:11px}.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px #65e6a177;margin-right:7px}
+.wrap{width:min(1200px,92%);margin:54px auto 70px}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}.kicker{font:11px var(--mono);color:#ff6675;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(32px,5vw,54px);letter-spacing:-2.8px;margin:12px 0 10px;line-height:1.05}.hero h1 span{color:var(--red)}.hero p{max-width:570px;color:var(--muted);font-size:13px;line-height:1.8;margin:0}.hero-chip{border:1px solid #ff334833;background:#ff33480d;color:#ff8b97;border-radius:9px;padding:11px 13px;font:10px var(--mono);white-space:nowrap}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(330px,.95fr);gap:18px;align-items:start}.stack{display:grid;gap:18px}.card{background:linear-gradient(155deg,#141419f2,#0d0d11f5);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 18px 60px #0002}.cardhead{padding:21px 23px 17px;border-bottom:1px solid #ffffff0b;display:flex;justify-content:space-between;align-items:center;gap:12px}.cardhead h2{font-size:14px;margin:0;font-weight:750}.cardhead p{font-size:11px;color:var(--muted);margin:6px 0 0}.step{font:10px var(--mono);color:#797985}.body{padding:22px 23px}.field{margin-bottom:18px}.labelrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}.labelrow label,.field>label{font-size:11px;font-weight:700;color:#dedee4}.hint{font-size:10px;color:#777783}.inputwrap{display:flex;position:relative}.inputwrap input{padding-right:48px}input,textarea{width:100%;background:#09090d;color:var(--text);border:1px solid #30303a;border-radius:9px;padding:12px 13px;outline:none;font-size:12px;transition:border .2s,box-shadow .2s}input:focus,textarea:focus{border-color:#ff4657;box-shadow:0 0 0 3px #ff334814}input::placeholder,textarea::placeholder{color:#62626e}.reveal{position:absolute;right:6px;top:5px;background:#222229;border:1px solid #34343c;color:#c8c8d0;border-radius:6px;padding:6px 8px;font-size:10px}.textarea{min-height:145px;resize:vertical;line-height:1.7}.count{text-align:right;color:#777783;font:10px var(--mono);margin-top:7px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.smallfield{margin-bottom:16px}.smallfield label{display:block;margin-bottom:8px;font-size:11px;font-weight:700;color:#dedee4}.sendbtn{width:100%;border:1px solid #ff6574;background:linear-gradient(110deg,#ff3c51,#d91d3b 60%,#a90c29);color:white;font-size:12px;font-weight:800;padding:14px;border-radius:10px;box-shadow:0 7px 24px #ff334822;transition:transform .2s,filter .2s}.sendbtn:hover{transform:translateY(-2px);filter:brightness(1.1)}.sendbtn:disabled{opacity:.6;cursor:wait;transform:none}.btnrow{display:flex;gap:9px;margin-top:10px}.btn{background:#1c1c23;color:#d8d8e0;border:1px solid #30303a;border-radius:8px;padding:10px 12px;font-size:11px;font-weight:700}.btn:hover{border-color:#ff4657;color:#fff}.btn.danger:hover{border-color:#e44;color:#ff8791}.status{display:none;margin-top:13px;padding:12px;border-radius:9px;font-size:11px;line-height:1.6;overflow-wrap:anywhere}.status.ok{display:block;background:#102a1e;border:1px solid #24583b;color:#8df0b4}.status.bad{display:block;background:#301419;border:1px solid #63232c;color:#ff9aa4}.status.info{display:block;background:#171d2d;border:1px solid #303e65;color:#aebfff}
+.preview{background:#1e1f22;border-radius:10px;padding:16px;display:flex;gap:12px;min-height:100px}.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(140deg,#ff4558,#780b21);display:grid;place-items:center;font-weight:900;flex-shrink:0;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.previewmain{min-width:0;flex:1}.pname{font-size:12px;font-weight:750;display:flex;align-items:center;gap:7px;flex-wrap:wrap}.appbadge{font-size:9px;background:#5865f2;color:#fff;border-radius:3px;padding:3px 5px}.time{font-size:9px;color:#92939a;font-weight:400}.pcontent{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7;color:#dcdddf;margin-top:8px;min-height:19px}.embedpreview{display:none;margin-top:12px;border-left:4px solid var(--red);border-radius:4px;background:#2b2d31;padding:12px}.embedtitle{font-weight:800;font-size:13px;margin-bottom:7px;overflow-wrap:anywhere}.embeddesc{white-space:pre-wrap;overflow-wrap:anywhere;color:#d1d2d5;font-size:11px;line-height:1.7}.embedfoot{font-size:10px;color:#a8a9b0;margin-top:10px}.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tool{padding:13px;background:#0c0c10;border:1px solid #2a2a32;border-radius:10px;text-align:left;color:#fff}.tool strong{display:block;font-size:11px;margin-bottom:5px}.tool span{font-size:10px;color:var(--muted);line-height:1.5}.tool:hover{border-color:#b62b3b}.tool.active{border-color:#ff4657;background:#ff33480b}.sectiontitle{font-size:10px;color:#8e8e9b;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;margin:0 0 12px}.history{display:grid;gap:8px}.historyitem{display:flex;align-items:center;gap:10px;border:1px solid #282830;border-radius:9px;padding:10px;background:#0c0c10}.historyicon{width:29px;height:29px;display:grid;place-items:center;background:#173324;color:#78e4a5;border-radius:8px;font-size:12px}.historytext{min-width:0;flex:1}.historytext strong{display:block;font-size:11px}.historytext small{display:block;color:var(--muted);font-size:10px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.empty{font-size:11px;color:#777783;line-height:1.7;padding:6px 0}.footnote{font-size:10px;line-height:1.8;color:#777783;margin:14px 0 0}.footer{text-align:center;padding:20px;border-top:1px solid #ffffff10;color:#686875;font-size:10px}.footer b{color:#d0d0d8}
+.toast{position:fixed;right:22px;bottom:22px;z-index:20;background:#19191f;border:1px solid #3a3a44;border-radius:10px;padding:14px 17px;font-size:12px;box-shadow:0 12px 40px #0008;opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;max-width:min(400px,90vw)}.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.hero-chip{white-space:normal}.topright .toplabel{display:none}}
+@media(max-width:500px){.wrap{margin-top:35px}.row{grid-template-columns:1fr}.body{padding:18px}.cardhead{padding:18px}.hero h1{letter-spacing:-1.7px}.tools{grid-template-columns:1fr 1fr}}
 </style>
 </head>
-
 <body>
-
-<header>
-  <div class="logo">ookwa<span>.</span></div>
-  <div class="badge">WEBHOOK SENDER</div>
+<header class="topbar">
+  <div class="brand"><div class="brand-icon">O</div><div>ookwa<em>.</em> <span style="font-weight:500;color:#858591">/ webhook studio</span></div></div>
+  <div class="topright"><span><i class="live-dot"></i><span class="toplabel">CLIENT-SIDE MODE</span></span><span style="color:#444450">v2.0</span></div>
 </header>
 
-<main>
-  <section class="intro">
-    <div class="eyebrow">Developer tools</div>
-    <h1>Webhook Sender<span style="color:#ef3340">.</span></h1>
-    <p>Write your message, preview it, and send it to your Discord channel.</p>
+<main class="wrap">
+  <section class="hero">
+    <div><div class="kicker">Discord utility · 001</div><h1>Webhook <span>Studio.</span></h1><p>A sleek control room for your Discord webhooks. Compose messages, build embeds, preview the result, and keep track of recent sends.</p></div>
+    <div class="hero-chip">✦ &nbsp; BUILT FOR YOUR COMMUNITY</div>
   </section>
 
-  <div class="layout">
-    <section class="panel">
-      <h2>Message Editor</h2>
-      <div class="sub">Configure your webhook and message below.</div>
+  <div class="grid">
+    <div class="stack">
+      <section class="card">
+        <div class="cardhead"><div><h2>Connection</h2><p>Connect to a webhook you control.</p></div><span class="step">01 / CONNECT</span></div>
+        <div class="body">
+          <div class="field"><div class="labelrow"><label for="webhook">WEBHOOK URL</label><span class="hint">HTTPS only</span></div>
+            <div class="inputwrap"><input id="webhook" type="password" autocomplete="off" placeholder="https://discord.com/api/webhooks/..." spellcheck="false"><button type="button" class="reveal" id="reveal">SHOW</button></div>
+          </div>
+          <div class="row">
+            <div class="smallfield"><label for="username">BOT DISPLAY NAME</label><input id="username" maxlength="80" placeholder="Ookwa Studio"></div>
+            <div class="smallfield"><label for="avatarUrl">AVATAR URL</label><input id="avatarUrl" type="url" placeholder="https://...png"></div>
+          </div>
+          <div class="btnrow"><button class="btn" id="checkBtn" type="button">↗ Check URL format</button><button class="btn" id="forgetBtn" type="button">✕ Clear connection</button></div>
+          <div class="status" id="connectionStatus" role="status"></div>
+        </div>
+      </section>
 
-      <form id="webhookForm">
-        <label for="webhook">Discord Webhook URL</label>
-        <input
-          id="webhook"
-          type="password"
-          placeholder="https://discord.com/api/webhooks/..."
-          autocomplete="off"
-          required
-        >
+      <section class="card">
+        <div class="cardhead"><div><h2>Composer</h2><p>Write a message or switch to embed mode.</p></div><span class="step">02 / COMPOSE</span></div>
+        <div class="body">
+          <div class="tools" style="margin-bottom:20px">
+            <button type="button" class="tool active" id="messageMode"><strong>✎ Message</strong><span>Plain text, multiline and links</span></button>
+            <button type="button" class="tool" id="embedMode"><strong>▣ Rich embed</strong><span>Title, description and color</span></button>
+          </div>
+          <div id="plainFields">
+            <div class="field"><div class="labelrow"><label for="message">MESSAGE CONTENT</label><span class="hint">Up to 2,000 characters</span></div><textarea class="textarea" id="message" maxlength="2000" placeholder="Write something for your Discord channel..."></textarea><div class="count"><span id="charCount">0</span> / 2000</div></div>
+          </div>
+          <div id="embedFields" style="display:none">
+            <div class="field"><label for="embedTitle">EMBED TITLE</label><input id="embedTitle" maxlength="256" placeholder="Announcement title"></div>
+            <div class="field"><label for="embedDesc">EMBED DESCRIPTION</label><textarea id="embedDesc" maxlength="4000" placeholder="Write your embed description..."></textarea><div class="count"><span id="embedCount">0</span> / 4000</div></div>
+            <div class="row">
+              <div class="smallfield"><label for="embedColor">ACCENT COLOR</label><input id="embedColor" type="color" value="#ff3348" style="height:42px;padding:5px"></div>
+              <div class="smallfield"><label for="embedFooter">FOOTER TEXT</label><input id="embedFooter" maxlength="2048" placeholder="Ookwa Community"></div>
+            </div>
+            <div class="row">
+              <div class="smallfield"><label for="embedAuthor">AUTHOR LABEL</label><input id="embedAuthor" maxlength="256" placeholder="Ookwa Team"></div>
+              <div class="smallfield"><label for="embedUrl">TITLE LINK (HTTPS)</label><input id="embedUrl" type="url" placeholder="https://example.com"></div>
+            </div>
+            <div class="row">
+              <div class="smallfield"><label for="embedImage">LARGE IMAGE URL</label><input id="embedImage" type="url" placeholder="https://example.com/image.png"></div>
+              <div class="smallfield"><label for="embedThumb">THUMBNAIL URL</label><input id="embedThumb" type="url" placeholder="https://example.com/thumb.png"></div>
+            </div>
+            <div class="smallfield"><label for="embedFieldsText">FIELDS (one per line: Name | Value)</label><textarea id="embedFieldsText" maxlength="5000" placeholder="Status | Online&#10;Version | 2.0"></textarea></div>
+          </div>
+          <div class="field"><div class="labelrow"><label for="allowedMentions">MENTION SAFETY</label><span class="hint">Default: no pings</span></div>
+            <select id="allowedMentions" style="width:100%;background:#09090d;color:#eee;border:1px solid #30303a;border-radius:9px;padding:12px;font-size:12px">
+              <option value="none">Prevent @everyone, @here and role/user pings</option>
+              <option value="users">Allow user mentions only</option>
+              <option value="all">Allow all mentions (use carefully)</option>
+            </select>
+          </div>
+          <button class="sendbtn" id="sendBtn" type="button">➤ &nbsp; Send to Discord</button>
+          <div class="status" id="sendStatus" role="status" aria-live="polite"></div>
+          <div class="row" style="margin-top:12px">
+            <div class="smallfield"><label for="delaySeconds">SEND DELAY (SECONDS)</label><input id="delaySeconds" type="number" min="0" max="60" value="0"></div>
+            <div class="smallfield"><label for="ttsMode">TEXT-TO-SPEECH</label><select id="ttsMode" style="width:100%;background:#09090d;color:#eee;border:1px solid #30303a;border-radius:9px;padding:12px;font-size:12px"><option value="false">Off</option><option value="true">On (plain messages)</option></select></div>
+          </div>
+          <div class="btnrow"><button type="button" class="btn" id="resetBtn">Reset composer</button><button type="button" class="btn" id="copyBtn">Copy message text</button></div>
+          <div class="btnrow"><button type="button" class="btn" id="exportPayloadBtn">↓ Export JSON payload</button><button type="button" class="btn" id="duplicateBtn">⧉ Duplicate last message</button></div>
+          <div class="btnrow"><button type="button" class="btn" id="markdownBtn">Insert Markdown helper</button><button type="button" class="btn" id="exportHistoryBtn">Export session history</button></div>
+        </div>
+      </section>
+    </div>
 
-        <label for="username">Webhook Display Name (optional)</label>
-        <input id="username" maxlength="80" placeholder="Ookwa Notifications">
+    <div class="stack">
+      <section class="card">
+        <div class="cardhead"><div><h2>Live Preview</h2><p>Updates as you compose.</p></div><span class="step">PREVIEW</span></div>
+        <div class="body">
+          <div class="preview">
+            <div class="avatar" id="previewAvatar">O</div>
+            <div class="previewmain"><div class="pname"><span id="previewName">Ookwa Studio</span><span class="appbadge">APP</span><span class="time">now</span></div><div class="pcontent" id="previewMessage">Your message will appear here.</div>
+              <div class="embedpreview" id="embedPreview"><div class="embedtitle" id="pEmbedTitle"></div><div class="embeddesc" id="pEmbedDesc"></div><div class="embedfoot" id="pEmbedFooter"></div><img id="pEmbedImage" alt="" style="display:none;max-width:100%;max-height:180px;object-fit:cover;border-radius:5px;margin-top:10px"><img id="pEmbedThumb" alt="" style="display:none;width:70px;height:70px;object-fit:cover;border-radius:5px;margin-top:10px"></div>
+            </div>
+          </div>
+          <p class="footnote">Preview is an approximation. Discord controls the final rendering, link previews, timestamps and markdown.</p>
+        </div>
+      </section>
 
-        <label for="message">Your Message</label>
-        <textarea
-          id="message"
-          maxlength="2000"
-          placeholder="Type your Discord message here..."
-          required
-        ></textarea>
-
-        <div class="row">
-          <div>
-            <label for="avatarUrl">Avatar Image URL (optional)</label>
-            <input id="avatarUrl" type="url" placeholder="https://example.com/avatar.png">
+      <section class="card">
+        <div class="cardhead"><div><h2>Quick Templates</h2><p>Load a starter message with one click.</p></div><span class="step">SHORTCUTS</span></div>
+        <div class="body">
+          <div class="tools">
+            <button type="button" class="tool" data-template="status"><strong>◉ Status Update</strong><span>Service health</span></button>
+            <button type="button" class="tool" data-template="giveaway"><strong>🎁 Giveaway</strong><span>Community giveaway</span></button>
+            <button type="button" class="tool" data-template="rules"><strong>▤ Rules Reminder</strong><span>Community guidelines</span></button>
+            <button type="button" class="tool" data-template="changelog"><strong>⌘ Changelog</strong><span>Release notes</span></button>
+            <button type="button" class="tool" data-template="announcement"><strong>⚑ Announcement</strong><span>Community news</span></button>
+            <button type="button" class="tool" data-template="maintenance"><strong>⚙ Maintenance</strong><span>Service updates</span></button>
+            <button type="button" class="tool" data-template="welcome"><strong>✦ Welcome</strong><span>New member greeting</span></button>
+            <button type="button" class="tool" data-template="event"><strong>◷ Event</strong><span>Event announcement</span></button>
           </div>
         </div>
+      </section>
 
-        <div class="actions">
-          <button type="button" class="secondary" id="clear">Clear</button>
-          <button type="button" class="secondary" id="previewButton">Update Preview</button>
-        </div>
-
-        <button class="send" id="sendButton" type="submit">Send Message →</button>
-        <div id="status" class="status" role="status" aria-live="polite"></div>
-      </form>
-    </section>
-
-    <section class="panel">
-      <h2>Live Preview</h2>
-      <div class="sub">A preview of how your message may appear in Discord.</div>
-
-      <div class="discord-preview">
-        <div class="avatar">O</div>
-        <div class="preview-content">
-          <div class="preview-name">
-            <span id="previewName">Ookwa Webhook</span>
-            <small>APP</small>
-          </div>
-          <div class="preview-message" id="previewMessage">Your message will appear here...</div>
-        </div>
-      </div>
-
-      <div class="preview-label">Connection</div>
-      <div style="font-size:13px;font-weight:600">
-        <span style="color:#65d98a">●</span> Ready to send
-      </div>
-      <p style="font-size:12px;color:#92929e;line-height:1.7">
-        Your webhook is contacted only when you press Send Message.
-      </p>
-
-      <div class="warning">
-        <strong style="color:#f5f5f7">Security reminder</strong><br>
-        Never share your webhook URL publicly. Anyone with access to it may be able to send messages to its channel. This page does not save the URL to local storage.
-      </div>
-    </section>
+      <section class="card">
+        <div class="cardhead"><div><h2>Payload Inspector</h2><p>Review the JSON that would be sent before sending.</p></div><span class="step">DEBUG</span></div>
+        <div class="body"><pre id="payloadInspector" style="white-space:pre-wrap;overflow-wrap:anywhere;background:#09090d;border:1px solid #2a2a32;border-radius:9px;padding:13px;color:#b8c8ff;font:10px/1.7 var(--mono);max-height:260px;overflow:auto">Compose a message to inspect the payload.</pre><div class="footnote">The inspector never includes your webhook URL.</div></div>
+      </section>
+      <section class="card">
+        <div class="cardhead"><div><h2>Recent Activity</h2><p>Only this browser session; message text is not saved.</p></div><button type="button" class="btn" id="clearHistory">Clear</button></div>
+        <div class="body"><div class="history" id="history"><div class="empty">No messages sent this session yet. Your successful sends will appear here.</div></div></div>
+      </section>
+      <div class="footnote">Security: your webhook URL is kept in this page's memory only and is not saved to browser storage. Do not share it or deploy this page with a real webhook URL embedded in the code.</div>
+    </div>
   </div>
 </main>
-
-<footer>Ookwa Webhook Sender · Use responsibly</footer>
+<footer class="footer"><b>ookwa.</b> Webhook Studio · Use only webhooks you own or are authorized to manage.</footer>
+<div class="toast" id="toast" role="status"></div>
 
 <script>
 const $ = id => document.getElementById(id);
+let mode = "message";
+let historyItems = [];
+let toastTimer;
 
-function updatePreview() {
-  $("previewName").textContent =
-    $("username").value.trim() || "Ookwa Webhook";
-
-  $("previewMessage").textContent =
-    $("message").value || "Your message will appear here...";
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("toast").classList.remove("show"), 2600);
 }
-
-$("message").addEventListener("input", updatePreview);
-$("username").addEventListener("input", updatePreview);
-$("previewButton").addEventListener("click", updatePreview);
-
-$("clear").addEventListener("click", () => {
-  $("message").value = "";
-  updatePreview();
-  showStatus("", "");
-});
-
-function showStatus(type, message) {
-  const box = $("status");
-  box.className = "status" + (type ? " " + type : "");
-  box.textContent = message;
+function status(id, kind, text) {
+  const el = $(id);
+  el.className = "status" + (kind ? " " + kind : "");
+  el.textContent = text;
 }
-
 function validWebhook(value) {
   try {
-    const url = new URL(value);
-    return (
-      url.protocol === "https:" &&
-      ["discord.com", "discordapp.com"].includes(url.hostname) &&
-      /^\/api\/webhooks\/\d+\/[^/]+\/?$/.test(url.pathname)
-    );
-  } catch {
-    return false;
-  }
+    const u = new URL(value);
+    return u.protocol === "https:" &&
+      ["discord.com", "discordapp.com"].includes(u.hostname) &&
+      /^\/api\/webhooks\/\d+\/[^/]+\/?$/.test(u.pathname);
+  } catch { return false; }
 }
+function setMode(next) {
+  mode = next;
+  $("plainFields").style.display = mode === "message" ? "" : "none";
+  $("embedFields").style.display = mode === "embed" ? "" : "none";
+  $("messageMode").classList.toggle("active", mode === "message");
+  $("embedMode").classList.toggle("active", mode === "embed");
+  renderPreview();
+}
+function renderPreview() {
+  const name = $("username").value.trim() || "Ookwa Studio";
+  $("previewName").textContent = name;
+  $("previewMessage").textContent = mode === "message"
+    ? ($("message").value || "Your message will appear here.")
+    : "";
+  $("charCount").textContent = $("message").value.length;
+  $("embedCount").textContent = $("embedDesc").value.length;
+  $("embedPreview").style.display = mode === "embed" ? "block" : "none";
+  $("embedPreview").style.borderLeftColor = $("embedColor").value;
+  $("pEmbedTitle").textContent = $("embedTitle").value;
+  $("pEmbedDesc").textContent = $("embedDesc").value || "Embed description preview...";
+  $("pEmbedFooter").textContent = [$("embedAuthor").value, $("embedFooter").value].filter(Boolean).join(" · ");
+  const largeImage = $("pEmbedImage"), thumbImage = $("pEmbedThumb");
+  largeImage.style.display = $("embedImage").value ? "block" : "none";
+  largeImage.src = $("embedImage").value || "";
+  thumbImage.style.display = $("embedThumb").value ? "block" : "none";
+  thumbImage.src = $("embedThumb").value || "";
+  const avatar = $("previewAvatar");
+  updatePayloadInspector();
+  const avatarUrl = $("avatarUrl").value.trim();
+  avatar.replaceChildren();
+  if (avatarUrl && /^https:\/\//i.test(avatarUrl)) {
+    const img = new Image();
+    img.alt = "";
+    img.src = avatarUrl;
+    img.onerror = () => { avatar.textContent = "O"; };
+    avatar.appendChild(img);
+  } else avatar.textContent = "O";
+}
+["username","avatarUrl","message","embedTitle","embedDesc","embedColor","embedFooter","embedAuthor","embedUrl","embedImage","embedThumb","embedFieldsText","allowedMentions","ttsMode"].forEach(id => $(id).addEventListener("input", renderPreview));
+["allowedMentions","ttsMode"].forEach(id => $(id).addEventListener("change", renderPreview));
 
-$("webhookForm").addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const webhook = $("webhook").value.trim();
-  const message = $("message").value;
+function buildPayload() {
+  const payload = {};
   const username = $("username").value.trim();
   const avatarUrl = $("avatarUrl").value.trim();
-
-  if (!validWebhook(webhook)) {
-    showStatus("error", "Enter a valid Discord webhook URL.");
-    return;
-  }
-
-  if (!message.trim()) {
-    showStatus("error", "Please enter a message.");
-    return;
-  }
-
-  if (avatarUrl) {
-    try {
-      const url = new URL(avatarUrl);
-      if (url.protocol !== "https:") throw new Error();
-    } catch {
-      showStatus("error", "The avatar URL must be a valid HTTPS URL.");
-      return;
-    }
-  }
-
-  const payload = { content: message };
-
   if (username) payload.username = username;
   if (avatarUrl) payload.avatar_url = avatarUrl;
+  const mentionMode = $("allowedMentions").value;
+  payload.allowed_mentions = mentionMode === "none" ? {parse:[]} :
+    mentionMode === "users" ? {parse:["users"]} : {parse:["everyone","roles","users"]};
+  if (mode === "message") {
+    payload.content = $("message").value;
+    payload.tts = $("ttsMode").value === "true";
+  } else {
+    const title = $("embedTitle").value.trim();
+    const description = $("embedDesc").value;
+    const footer = $("embedFooter").value.trim();
+    const author = $("embedAuthor").value.trim();
+    const embed = {color:parseInt($("embedColor").value.slice(1),16)};
+    if (title) embed.title = title;
+    if (description) embed.description = description;
+    if ($("embedUrl").value.trim()) embed.url = $("embedUrl").value.trim();
+    if (footer) embed.footer = {text:footer};
+    if (author) embed.author = {name:author};
+    if ($("embedImage").value.trim()) embed.image = {url:$("embedImage").value.trim()};
+    if ($("embedThumb").value.trim()) embed.thumbnail = {url:$("embedThumb").value.trim()};
+    const fields = $("embedFieldsText").value.split("\\n").map(line => {
+      const ix = line.indexOf("|");
+      if (ix < 1) return null;
+      const name = line.slice(0,ix).trim(), value = line.slice(ix+1).trim();
+      return name && value ? {name,value,inline:true} : null;
+    }).filter(Boolean).slice(0,25);
+    if (fields.length) embed.fields = fields;
+    payload.embeds = [embed];
+  }
+  return payload;
+}
+function updatePayloadInspector() {
+  const out = $("payloadInspector");
+  if (!out) return;
+  try { out.textContent = JSON.stringify(buildPayload(), null, 2); }
+  catch { out.textContent = "Enter valid values to preview the JSON payload."; }
+}
+$("messageMode").addEventListener("click", () => setMode("message"));
+$("embedMode").addEventListener("click", () => setMode("embed"));
+$("reveal").addEventListener("click", () => {
+  const input = $("webhook");
+  input.type = input.type === "password" ? "text" : "password";
+  $("reveal").textContent = input.type === "password" ? "SHOW" : "HIDE";
+});
+$("checkBtn").addEventListener("click", () => {
+  const value = $("webhook").value.trim();
+  if (!value) return status("connectionStatus","bad","Paste a webhook URL first.");
+  status("connectionStatus", validWebhook(value) ? "ok" : "bad",
+    validWebhook(value) ? "URL format looks valid. This does not verify that the webhook exists or is accessible." : "That URL format doesn't look like a standard Discord webhook URL.");
+});
+$("forgetBtn").addEventListener("click", () => {
+  $("webhook").value = "";
+  status("connectionStatus","","");
+  toast("Webhook URL cleared from the page.");
+});
+$("resetBtn").addEventListener("click", () => {
+  $("message").value = "";
+  $("embedTitle").value = "";
+  $("embedDesc").value = "";
+  $("embedFooter").value = "";
+  $("embedColor").value = "#ff3348";
+  setMode("message");
+  renderPreview();
+  status("sendStatus","","");
+  toast("Composer reset.");
+});
+$("copyBtn").addEventListener("click", async () => {
+  const text = mode === "message" ? $("message").value : [$("embedTitle").value,$("embedDesc").value].filter(Boolean).join("\n\n");
+  if (!text) return toast("Nothing to copy yet.");
+  try { await navigator.clipboard.writeText(text); toast("Message text copied."); }
+  catch { toast("Clipboard access was blocked by the browser."); }
+});
+$("clearHistory").addEventListener("click", () => {
+  historyItems = [];
+  renderHistory();
+});
+document.querySelectorAll("[data-template]").forEach(button => button.addEventListener("click", () => {
+  const templates = {
+    status: {title:"🟢 Service Status", desc:"**Current status:** Operational\n**Updated:** Just now\n\nAll systems are running normally.", footer:"Status Updates"},
+    giveaway: {title:"🎁 Community Giveaway", desc:"We're hosting a giveaway!\n\n**Prize:** Add prize here\n**Ends:** Add date and time\n**How to enter:** Follow the server's giveaway instructions.", footer:"Good luck everyone!"},
+    rules: {title:"📌 Community Reminder", desc:"Please remember to follow the community rules, be respectful, and keep the appropriate content in each channel. Contact staff if you need help.", footer:"Staff Team"},
+    changelog: {title:"⌘ What's New", desc:"**Added** — New features\n**Improved** — Performance and reliability\n**Fixed** — Minor bugs\n\nMore details coming soon.", footer:"Release Notes"},
+    announcement: {title:"📢 Community Announcement", desc:"We have an important update to share with everyone.\n\nMore details coming soon.", footer:"Community Team"},
+    maintenance: {title:"🔧 Scheduled Maintenance", desc:"We will be performing scheduled maintenance.\n\nSome services may be temporarily unavailable. Thank you for your patience.", footer:"Server Status"},
+    welcome: {title:"✦ Welcome to the Community!", desc:"We're glad you're here.\n\nPlease read the rules and enjoy your stay!", footer:"Welcome aboard"},
+    event: {title:"◷ Upcoming Event", desc:"**Event:** Community Event\n**Date:** Add date and time\n**Details:** More information soon.", footer:"Events Team"}
+  };
+  const t = templates[button.dataset.template];
+  $("embedTitle").value = t.title;
+  $("embedDesc").value = t.desc;
+  $("embedFooter").value = t.footer;
+  setMode("embed");
+  renderPreview();
+  toast("Template loaded. Edit it before sending.");
+}));
+function renderHistory() {
+  const root = $("history");
+  root.replaceChildren();
+  if (!historyItems.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.textContent = "No messages sent this session yet. Your successful sends will appear here.";
+    root.appendChild(empty);
+    return;
+  }
+  historyItems.slice().reverse().forEach(item => {
+    const row = document.createElement("div"); row.className = "historyitem";
+    const icon = document.createElement("div"); icon.className = "historyicon"; icon.textContent = "✓";
+    const text = document.createElement("div"); text.className = "historytext";
+    const title = document.createElement("strong"); title.textContent = item.type + " sent";
+    const detail = document.createElement("small"); detail.textContent = item.summary + " · " + item.time;
+    text.append(title,detail); row.append(icon,text); root.appendChild(row);
+  });
+}
+$("sendBtn").addEventListener("click", async () => {
+  const webhook = $("webhook").value.trim();
+  if (!validWebhook(webhook)) return status("sendStatus","bad","Enter a valid Discord webhook URL before sending.");
+  const payload = {};
+  const username = $("username").value.trim();
+  const avatarUrl = $("avatarUrl").value.trim();
+  if (username) payload.username = username;
+  if (avatarUrl) {
+    try { const u = new URL(avatarUrl); if (u.protocol !== "https:") throw new Error(); }
+    catch { return status("sendStatus","bad","Avatar URL must be a valid HTTPS URL."); }
+    payload.avatar_url = avatarUrl;
+  }
+  const mentionMode = $("allowedMentions").value;
+  payload.allowed_mentions = mentionMode === "none" ? {parse:[]} :
+    mentionMode === "users" ? {parse:["users"]} : {parse:["everyone","roles","users"]};
 
-  const button = $("sendButton");
-  button.disabled = true;
-  button.textContent = "Sending...";
-  showStatus("", "");
-
+  let summary, type;
+  if (mode === "message") {
+    const content = $("message").value;
+    if (!content.trim()) return status("sendStatus","bad","Write a message before sending.");
+    if (content.length > 2000) return status("sendStatus","bad","Messages must be 2,000 characters or fewer.");
+    payload.content = content; summary = content.replace(/\s+/g," ").slice(0,90); type = "Message";
+  } else {
+    const title = $("embedTitle").value.trim();
+    const description = $("embedDesc").value;
+    const footer = $("embedFooter").value.trim();
+    if (!title && !description) return status("sendStatus","bad","Add an embed title or description first.");
+    const embed = {color:parseInt($("embedColor").value.slice(1),16)};
+    if (title) embed.title = title;
+    if (description) embed.description = description;
+    if (footer) embed.footer = {text:footer};
+    payload.embeds = [embed];
+    summary = title || description.replace(/\s+/g," ").slice(0,90); type = "Embed";
+  }
+  const btn = $("sendBtn");
+  btn.disabled = true; btn.textContent = "Sending…";
+  status("sendStatus","","");
   try {
     const response = await fetch(webhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
     });
-
     if (!response.ok) {
       let detail = "";
-      try {
-        const data = await response.json();
-        detail = data.message || "";
-      } catch {}
-
-      throw new Error(
-        `Discord returned HTTP ${response.status}` +
-        (detail ? ": " + detail : ". Check the webhook and permissions.")
-      );
+      try { const data = await response.json(); detail = data.message || ""; } catch {}
+      throw new Error("Discord returned HTTP " + response.status + (detail ? ": " + detail : ". Check the URL and webhook."));
     }
-
-    showStatus("success", "Message sent successfully!");
-  } catch (error) {
-    showStatus(
-      "error",
-      error instanceof TypeError
-        ? "The request failed. Your browser may be blocking the connection, or the network may be unavailable. Try another browser or use a small backend to send the webhook."
-        : error.message
-    );
+    status("sendStatus","ok","✓ Sent successfully to Discord.");
+    historyItems.push({
+      type, summary,
+      content: mode === "message" ? $("message").value : $("embedDesc").value,
+      title: $("embedTitle").value,
+      time:new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})
+    });
+    renderHistory();
+    toast("Successfully sent to Discord.");
+  } catch (err) {
+    status("sendStatus","bad",err instanceof TypeError
+      ? "The browser blocked the request or the network failed. Try another browser or use a small backend to send webhooks."
+      : err.message);
   } finally {
-    button.disabled = false;
-    button.textContent = "Send Message →";
+    btn.disabled = false; btn.textContent = "➤  Send to Discord";
   }
 });
+$("exportPayloadBtn").addEventListener("click", () => {
+  const payload = buildPayload();
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "ookwa-webhook-payload.json"; a.click();
+  URL.revokeObjectURL(url); toast("Payload JSON exported (webhook URL excluded).");
+});
+$("duplicateBtn").addEventListener("click", () => {
+  const last = historyItems[historyItems.length - 1];
+  if (!last) return toast("No recent successful send to duplicate.");
+  if (last.type === "Message") {
+    $("message").value = last.content || "";
+    setMode("message");
+  } else {
+    $("embedTitle").value = last.title || "";
+    $("embedDesc").value = last.content || "";
+    setMode("embed");
+  }
+  renderPreview(); toast("Last message copied into the composer. Review before sending.");
+});
+$("markdownBtn").addEventListener("click", () => {
+  setMode("message");
+  $("message").value += ($("message").value ? "\\n" : "") + "**Bold**  *Italic*  __Underline__\\n`inline code`\\n> Block quote\\n[Link text](https://example.com)";
+  renderPreview(); toast("Markdown helper inserted. Customize the sample text.");
+});
+$("exportHistoryBtn").addEventListener("click", () => {
+  if (!historyItems.length) return toast("No session history to export.");
+  const blob = new Blob([JSON.stringify(historyItems.map(({type,summary,time})=>({type,summary,time})),null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "ookwa-session-history.json"; a.click();
+  URL.revokeObjectURL(url); toast("Session history exported.");
+});
+renderPreview();
 </script>
-
 </body>
 </html>
